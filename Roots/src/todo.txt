@@ -1,0 +1,7 @@
+Things to do:
+1) Find seed (idea - when many roots come together and touch the same blob,
+	that is the seed).
+2) Horizontal roots - do not detect well, try to fix this.
+3) Remove small roots - some roots are very small (<5 voxels), explore why
+4) Begin coding traits to extract from each root
+5) Experiment & Ground truth
