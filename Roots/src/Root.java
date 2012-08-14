@@ -39,5 +39,15 @@ public class Root {
 		lastLevel = adds;
 	}
 	
+	public boolean isCrown() {
+		double logres = 1; //Input real logistic regression here
+		if (logres > 0.5) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
 }
 

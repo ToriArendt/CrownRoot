@@ -323,7 +323,34 @@ public class Separation {
 		Separation f = new Separation();
 		f.readIn("testmodel1.txt");
 		f.splitLevels();
-		f.outputRoots("roots.txt");
-		f.outputColors("colors.txt");
+		//f.outputRoots("roots.txt");
+		f.outputTabular();
+		}
+
+	private void outputTabular() {
+		try {
+			BufferedWriter outC = new BufferedWriter(new FileWriter("crown.txt"));
+			BufferedWriter outN = new BufferedWriter(new FileWriter("crown.txt"));
+			for (Root r: allRoots) {
+				if (r.isCrown()){
+					for (Coord c: r.voxels) {
+						outC.write(c.x + " " + c.y + " " + c.z);
+						outC.newLine();
+					}
+					//outC.write(cbuf) put other things here on next lines
+				}
+				else if (!r.isCrown()) {
+					for (Coord c: r.voxels) {
+						outN.write(c.x + " " + c.y + " " + c.z);
+						outN.newLine();
+					}
+					//outN.write(cbuf) put other things here on next lines
+				}
+			}
+			outC.close();
+			outN.close();
+            
+		} catch (IOException e) {
+		}	
 	}
 }
