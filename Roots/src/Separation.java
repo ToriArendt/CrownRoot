@@ -13,24 +13,23 @@ import java.util.Scanner;
  *  Root Separation Version 1
  *  Separation.java
  *  Purpose: Main class that separates each individual root.
- *
+ *  
  *  @param allCoords: All the voxels in a root system.
  *  @param currentCircle: The voxels currently being explored
  *  @param currentLevel: All voxels in the current cross section
  *  @param allRoots: All roots that are part of this system.
  */
-
 public class Separation {
 	ArrayList<Coord> allCoords = new ArrayList<Coord>();
 	ArrayList<Coord> currentCircle = new ArrayList<Coord>();
 	ArrayList<Coord> currentLevel = new ArrayList<Coord>();
 	ArrayList<Root> allRoots = new ArrayList<Root>();
-    
+	ArrayList<Root> highTouchingCircs = new ArrayList<Root>();
 	/**
 	 * Read in a file with all voxels from a root system (with
 	 * two lines of header).
-	 *
-	 * @param fileName: Name of file
+	 * 
+	 * @param fileName: Name of file 
 	 * @throws FileNotFoundException
 	 */
 	public void readIn(String fileName) throws FileNotFoundException {
@@ -47,10 +46,10 @@ public class Separation {
 			scanner.close();
 		}
 	}
-    
+
 	/**
 	 * Reads in each voxel and adds it to allCoords
-	 *
+	 * 
 	 * @param str: input "x y z"
 	 */
 	private void process(String str) {
@@ -61,16 +60,28 @@ public class Separation {
 		Coord c = new Coord (x,y,z);
 		allCoords.add(c);
 	}
-    
+
 	/**
-	 * Split all voxels by z-value, then call splitIntoRoots() on
+	 * Split all voxels by z-value, then call splitIntoRoots() on 
 	 * each group of coordinates.
 	 */
 	private void splitLevels() {
 		int first = 0;
 		for(int i = 1; i<allCoords.size(); i++) {
 			if (allCoords.get(i).z != allCoords.get(i-1).z) {
-				for(int j=first; j<i; j++)
+				if (allCoords.get(i-1).z == 125) {
+					try {
+						BufferedWriter out = new BufferedWriter(new FileWriter("zcross.txt"));
+						for(int j=first; j<i; j++){
+							Coord c = allCoords.get(j);
+							out.write(c.x + " " + c.y);
+							out.newLine();
+							}
+						out.close();
+					} catch (IOException e) {
+					}
+				}
+				for(int j=first; j<i; j++) 
 					currentLevel.add(allCoords.get(j));
 				splitIntoRoots(); // automatically splits the cross section into roots
 				currentLevel.clear();
@@ -78,7 +89,7 @@ public class Separation {
 			}
 		}
 	}
-    
+
 	/**
 	 * First, finds all blobs (circles) of connected voxels in each
 	 * cross sections, then combine these blobs with previous roots.
@@ -87,38 +98,35 @@ public class Separation {
 		ArrayList<ArrayList<Coord>> circ = findCircles();
 		combinePastRoots(circ);
 	}
-    
+
 	/**
 	 * Determine how many previous roots each blob of connected voxels
 	 * touches, and either create a new root or combine with best fit.
-	 *
+	 * 
 	 * @param circ: All blobs that were found in findCircles().
 	 */
 	private void combinePastRoots(ArrayList<ArrayList<Coord>> circ) {
-        
-		/*
-		 * Find how many roots each blob is touching.
-		 */
+//		 Find how many roots each blob is touching.
 		for (ArrayList<Coord> circs:circ) {
 			ArrayList<Root> touchRoots = new ArrayList<Root>();
 			for(Coord c1: circs) {
 				for (Root r: allRoots) {
 					for (Coord c2:r.lastLevel){
-						if (isTouching(c1,c2)) {
+						if (isTouching(c1,c2)&&!touchRoots.contains(r)) {
 							touchRoots.add(r);
 							break;
 						}
 					}
 				}
 			}
-			
+
 			/*
 			 * If it does not touch any previous roots, create new root.
 			 */
 			if(touchRoots.size() == 0) {
 				allRoots.add(new Root(circs));
 			}
-			
+
 			/*
 			 * If it only touches one root, combine with that one.
 			 */
@@ -128,10 +136,18 @@ public class Separation {
 				t.addCoords(circs);
 				allRoots.add(t);
 			}
-			
+
 			/*
-			 * If it touches >1 root, compare the roots.
+			 * If it touches >1 root, compare the roots. 
 			 */
+			else if (touchRoots.size() >=8){ 
+				Root r = new Root(circs);
+				r.isSeed = true;
+				allRoots.add(r);
+				for(Root touch: touchRoots) {
+					touch.touchseed = true;
+				}
+			}
 			else{
 				Root best = compareRoots(touchRoots, circs);
 				allRoots.remove(best);
@@ -139,19 +155,28 @@ public class Separation {
 				allRoots.add(best);
 			}
 		}
+
 	}
-    
+
 	/**
 	 * Compares a variety of roots with a given blob of connected voxels
-	 * in a certain z-cross section to determine which root the blob best
+	 * in a certain z-cross section to determine which root the blob best 
 	 * fits with.
-	 *
+	 * 
 	 * @param touchRoots: All roots the touch the blob.
 	 * @param circs: Voxels in the blob
 	 * @return: best fit root.
 	 */
 	private Root compareRoots(ArrayList<Root> touchRoots, ArrayList<Coord> circs) {
-		
+		for (Root r: touchRoots) {
+			if (r.isSeed) {
+				for(Root touch:touchRoots) {
+					touch.touchseed = true;
+				}
+				return r;
+			}
+		}
+
 		/*
 		 * Determine if one of the roots started at a very close z-value
 		 * and do not choose this one (this would occur with lateral roots).
@@ -170,12 +195,12 @@ public class Separation {
 		else if(touchRoots.size() > smallRoot.size()) {
 			touchRoots.removeAll(smallRoot);
 		}
-        
+
 		/*
 		 * If there is still more than one root that is touching, score
 		 * each root based on the amount of voxels in the root that touch
 		 * the voxels in the blob. Return the one with the highest score.
-		 *
+		 * 
 		 */
 		int maxScore = 0;
 		ArrayList<Root> best = new ArrayList<Root>();
@@ -197,12 +222,12 @@ public class Separation {
 				best.add(r);
 			}
 		}
-        
+
 		if(best.size() == 1) {
 			return best.get(0);
 		}
 		/*
-		 * If two roots have the same score (very unlikely) return the
+		 * If two roots have the same score (very unlikely) return the 
 		 * larger root.
 		 */
 		else{
@@ -217,7 +242,7 @@ public class Separation {
 			return ro;
 		}
 	}
-    
+
 	/**
 	 * Finds all the blobs (circles) of connected voxels at a certain z-value.
 	 * @return: all blobs.
@@ -237,11 +262,13 @@ public class Separation {
 		}
 		return circs;
 	}
-    
+
+
+
 	/**
 	 * Starting from a certain voxel, add its touching voxels
 	 * and then call the method on each added voxel.
-	 *
+	 * 
 	 * @param c: input voxel
 	 */
 	private void recurseCircle(Coord c) {
@@ -251,82 +278,67 @@ public class Separation {
 				recurseCircle(c1);
 			}
 		}
+
 	}
-    
+
 	/**
 	 * Determines if 2 voxels are touching.
-	 *
+	 * 
 	 * @param c1: voxel 1
 	 * @param c2: voxel 2
 	 * @return: true if touching, false if not touching.
 	 */
 	private boolean isTouching(Coord c1, Coord c2) {
-		if (Math.abs(c1.x-c2.x) <=1 && Math.abs(c1.y-c2.y) <=1) {
+		if (Math.abs(c1.x-c2.x) <=2 && Math.abs(c1.y-c2.y) <=2) {
 			return true;
 		}
 		else
 			return false;
 	}
-    
+
 	/**
 	 * Outputs the "x y z" coordinates of each voxel of each root
 	 * to the file specified, adding a space between roots.
-	 *
+	 * 
 	 * @param fileName: output file name.
 	 */
 	private void outputRoots(String fileName) {
 		try {
 			BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
 			for (Root r: allRoots) {
+			if(r.voxels.size() >=20){
+				Collections.sort(r.voxels);
 				for (Coord c: r.voxels) {
 					out.write(c.x + " " + c.y + " " + c.z);
 					out.newLine();
 				}
+			}
 				out.newLine();
 			}
 			out.close();
 		} catch (IOException e) {
 		}
 	}
-    
-	/**
-	 * Outputs the r g b values of the colors associated with each voxel
-	 * (same root = same color)
-	 *
-	 * @param fileName: output file name.
-	 */
-	private void outputColors(String fileName) {
-		try {
-			BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
-			for (Root r: allRoots) {
-				Color c = r.color;
-				int num = r.voxels.size();
-				for (int i = 1; i<=num; i++){
-					out.write(c.getRed() + " " + c.getGreen() + " " + c.getBlue());
-					out.newLine();
-				}
-				out.newLine();
-			}
-			out.close();
-            
-		} catch (IOException e) {
-		}
-	}
-    
-	/**
-	 * Main method that runs the program.
-	 *
-	 * @param args
-	 * @throws FileNotFoundException
-	 */
-	public static void main(String[] args) throws FileNotFoundException{
-		Separation f = new Separation();
-		f.readIn("testmodel1.txt");
-		f.splitLevels();
-		//f.outputRoots("roots.txt");
-		f.outputTabular();
-		}
 
+	private void combineSeeds() {
+		ArrayList<Root> allSeeds = new ArrayList<Root>();
+		for (Root r: allRoots) {
+			if (r.isSeed) {
+				allSeeds.add(r);
+			}
+		}
+		ArrayList<Coord> seed = new ArrayList<Coord>();
+		for (Root s: allSeeds){
+			allRoots.remove(s);
+			seed.addAll(s.voxels);
+		}
+		Root s = new Root(seed);
+		s.isSeed = true;
+		allRoots.add(s);
+	}
+
+
+	
 	private void outputTabular() {
 		try {
 			BufferedWriter outC = new BufferedWriter(new FileWriter("crown.txt"));
@@ -353,4 +365,19 @@ public class Separation {
 		} catch (IOException e) {
 		}	
 	}
+
+	/**
+	 * Main method that runs the program. 
+	 * 
+	 * @param args
+	 * @throws FileNotFoundException
+	 */
+	public static void main(String[] args) throws FileNotFoundException{
+		Separation f = new Separation();
+		f.readIn("testmodel1.txt");
+		f.splitLevels();
+		f.combineSeeds();
+		f.outputTabular();
+	}
+
 }
