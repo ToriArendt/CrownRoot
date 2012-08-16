@@ -69,18 +69,6 @@ public class Separation {
 		int first = 0;
 		for(int i = 1; i<allCoords.size(); i++) {
 			if (allCoords.get(i).z != allCoords.get(i-1).z) {
-				if (allCoords.get(i-1).z == 125) {
-					try {
-						BufferedWriter out = new BufferedWriter(new FileWriter("zcross.txt"));
-						for(int j=first; j<i; j++){
-							Coord c = allCoords.get(j);
-							out.write(c.x + " " + c.y);
-							out.newLine();
-							}
-						out.close();
-					} catch (IOException e) {
-					}
-				}
 				for(int j=first; j<i; j++) 
 					currentLevel.add(allCoords.get(j));
 				splitIntoRoots(); // automatically splits the cross section into roots
@@ -106,7 +94,7 @@ public class Separation {
 	 * @param circ: All blobs that were found in findCircles().
 	 */
 	private void combinePastRoots(ArrayList<ArrayList<Coord>> circ) {
-//		 Find how many roots each blob is touching.
+		//		 Find how many roots each blob is touching.
 		for (ArrayList<Coord> circs:circ) {
 			ArrayList<Root> touchRoots = new ArrayList<Root>();
 			for(Coord c1: circs) {
@@ -306,13 +294,13 @@ public class Separation {
 		try {
 			BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
 			for (Root r: allRoots) {
-			if(r.voxels.size() >=20){
-				Collections.sort(r.voxels);
-				for (Coord c: r.voxels) {
-					out.write(c.x + " " + c.y + " " + c.z);
-					out.newLine();
+				if(r.voxels.size() >=20){
+					Collections.sort(r.voxels);
+					for (Coord c: r.voxels) {
+						out.write(c.x + " " + c.y + " " + c.z);
+						out.newLine();
+					}
 				}
-			}
 				out.newLine();
 			}
 			out.close();
@@ -334,34 +322,68 @@ public class Separation {
 		}
 		Root s = new Root(seed);
 		s.isSeed = true;
-		allRoots.add(s);
+		//allRoots.add(s); Don't actually want seed considered in program
+	}
+	
+	private void removeSmallRoots() {
+		ArrayList<Root> smallRoots = new ArrayList<Root>();
+		for (Root r: allRoots) {
+			if (r.volume() < 20) {
+				smallRoots.add(r);
+			}
+		}
+		for (Root r: smallRoots) {
+			allRoots.remove(r);
+		}
 	}
 
 
-	
+
 	private void outputTabular() {
 		try {
 			BufferedWriter outC = new BufferedWriter(new FileWriter("crown.txt"));
-			BufferedWriter outN = new BufferedWriter(new FileWriter("crown.txt"));
+			BufferedWriter outN = new BufferedWriter(new FileWriter("other.txt"));
 			for (Root r: allRoots) {
 				if (r.isCrown()){
 					for (Coord c: r.voxels) {
-						outC.write(c.x + " " + c.y + " " + c.z);
+						outC.write("voxel\t" + c.x + "\t" + c.y + "\t" + c.z);
 						outC.newLine();
 					}
-					//outC.write(cbuf) put other things here on next lines
+					outC.write("area\t" + r.area());
+					outC.newLine();
+					outC.write("angle\t" + r.angle());
+					outC.newLine();
+					outC.write("volume\t" + r.volume());
+					outC.newLine();
+					outC.write("curve\t" + r.curvature());
+					outC.newLine();
+					outC.write("touch\t" + r.attachedToSeed());
+					outC.newLine();
+					outC.write("logistic\t" + r.logisticRegression());
+					outC.newLine();
 				}
 				else if (!r.isCrown()) {
 					for (Coord c: r.voxels) {
-						outN.write(c.x + " " + c.y + " " + c.z);
+						outN.write("voxel\t" + c.x + "\t" + c.y + "\t" + c.z);
 						outN.newLine();
 					}
-					//outN.write(cbuf) put other things here on next lines
+					outN.write("area\t" + r.area());
+					outN.newLine();
+					outN.write("angle\t" + r.angle());
+					outN.newLine();
+					outN.write("volume\t" + r.volume());
+					outN.newLine();
+					outN.write("curve\t" + r.curvature());
+					outN.newLine();
+					outN.write("touch\t" + r.attachedToSeed());
+					outN.newLine();
+					outN.write("logistic\t" + r.logisticRegression());
+					outN.newLine();
 				}
 			}
 			outC.close();
 			outN.close();
-            
+
 		} catch (IOException e) {
 		}	
 	}
@@ -377,6 +399,7 @@ public class Separation {
 		f.readIn("testmodel1.txt");
 		f.splitLevels();
 		f.combineSeeds();
+		f.removeSmallRoots();
 		f.outputTabular();
 	}
 

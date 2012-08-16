@@ -1,8 +1,15 @@
 import java.awt.Color;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import javax.vecmath.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
+import java.util.Scanner;
 
 /**
  * Root objects
@@ -49,19 +56,17 @@ public class Root implements Comparable<Root>{
 	public int compareTo(Root r) {
 		return voxels.size() - r.voxels.size();
 	}
-	/* Working code
-	 * below here
-	 */
+
 	public double area(){
 		ArrayList<Coorddoub> rep = getAverageVoxels();
 		Collections.sort(rep);
 		int quarter = (rep.size()/4)-1;
-		if (quarter<0) {
-			quarter = 1;
+		if (quarter<=0) {
+			quarter = 0;
 		}
 		int count = 0;
 		for (Coord c:voxels) {
-			if (c.z == quarter) {
+			if (c.z == rep.get(quarter).z) {
 				count++;
 			}
 		}
@@ -134,9 +139,10 @@ public class Root implements Comparable<Root>{
 		Collections.sort(rep);
 		int size = rep.size();
 		int quarter = (size/4)-1;
-		if (size == quarter || quarter < 0) {
+		if ( quarter <= 0) {
 			quarter = size-1;
 		}
+		
 		Coorddoub first = rep.get(0);
 		Coorddoub next = rep.get(quarter);
 		Coorddoub vector = new Coorddoub(next.x-first.x, next.y-first.y, next.z-first.z);
@@ -148,18 +154,40 @@ public class Root implements Comparable<Root>{
 	}
 	
 	public boolean attachedToSeed(){
+		return touchseed;
+	}
+	
+	public boolean isSeed() {
 		return isSeed;
 	}
 	
 
-	public boolean isCrown() {
+	public double logisticRegression() {
 		double logres = 1; //Input real logistic regression here
+		return logres;
+	}
+	
+	public boolean isCrown() {
+		double logres = logisticRegression();
 		if (logres > 0.5) {
 			return true;
 		}
 		else {
 			return false;
 		}
+	}
+	
+	public static void main (String args[]) throws FileNotFoundException {
+		ArrayList<Coord> vox = new ArrayList<Coord>();
+		Scanner scanner = new Scanner(new File("test1.txt"));
+		while(scanner.hasNextLine()){
+		   String s = scanner.nextLine();
+		   String[] values = s.split("\\s+");
+		   Coord c = new Coord(Integer.parseInt(values[1]), Integer.parseInt(values[2]), Integer.parseInt(values[3]));
+		   vox.add(c);
+		}
+		Root r = new Root(vox);
+		System.out.println(r.angle());
 	}
 	
 }
