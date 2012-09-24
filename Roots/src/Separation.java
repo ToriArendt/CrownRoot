@@ -1,5 +1,4 @@
 // Import statements
-import java.awt.Color;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -344,7 +343,7 @@ public class Separation {
 			BufferedWriter outC = new BufferedWriter(new FileWriter("crown.txt"));
 			BufferedWriter outN = new BufferedWriter(new FileWriter("other.txt"));
 			for (Root r: allRoots) {
-				if (r.isCrown()){
+				if (r.isCrown() == 1){
 					for (Coord c: r.voxels) {
 						outC.write("voxel\t" + c.x + "\t" + c.y + "\t" + c.z);
 						outC.newLine();
@@ -362,7 +361,7 @@ public class Separation {
 					outC.write("logistic\t" + r.logisticRegression());
 					outC.newLine();
 				}
-				else if (!r.isCrown()) {
+				else {
 					for (Coord c: r.voxels) {
 						outN.write("voxel\t" + c.x + "\t" + c.y + "\t" + c.z);
 						outN.newLine();

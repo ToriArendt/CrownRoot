@@ -1,14 +1,11 @@
-import java.awt.Color;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
 
-import javax.vecmath.*;
+import weka.core.DenseInstance;
+import weka.core.Instance;
+
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -23,12 +20,14 @@ import java.util.Scanner;
  */
 public class Root implements Comparable<Root>{
 	ArrayList<Coord> voxels = new ArrayList<Coord>();
-	
-	Color color;
 	ArrayList<Coord> lastLevel = new ArrayList<Coord>();
 	int firstZ;
 	boolean isSeed;
 	boolean touchseed;
+	boolean isCrown = false;
+	
+	int NUMBER_ATTRIBUTES = 6;
+	double[] atts = {area(), volume(), curvature(), angle(), attachedToSeed(), isCrown()};
 
 	/**
 	 * Constructor
@@ -37,8 +36,6 @@ public class Root implements Comparable<Root>{
 	public Root(ArrayList<Coord> vox) {
 		firstZ = vox.get(0).z;
 		voxels.addAll(vox);
-		Random gen = new Random();
-		color = new Color(gen.nextInt(256), gen.nextInt(256), gen.nextInt(256));
 		lastLevel = vox;
 		isSeed=false;
 	}
@@ -50,6 +47,11 @@ public class Root implements Comparable<Root>{
 	public void addCoords(ArrayList<Coord> adds) {
 		voxels.addAll(adds);
 		lastLevel = adds;
+	}
+	
+	public Instance getInstance() {
+		Instance inst = new DenseInstance(1, atts);
+		return inst;
 	}
 
 	@Override
@@ -73,7 +75,7 @@ public class Root implements Comparable<Root>{
 		return (count*Math.sin(angle()));
 	}
 	
-	public int volume(){
+	public double volume(){
 		return voxels.size();
 	}
 	
@@ -153,8 +155,11 @@ public class Root implements Comparable<Root>{
 		
 	}
 	
-	public boolean attachedToSeed(){
-		return touchseed;
+	public double attachedToSeed(){
+		if (touchseed) {
+			return 1;
+		}
+		return 0;
 	}
 	
 	public boolean isSeed() {
@@ -164,17 +169,17 @@ public class Root implements Comparable<Root>{
 
 	public double logisticRegression() {
 		double logres = 1; //Input real logistic regression here
+		if (logres > 0.5) {
+			isCrown = true;
+		}
 		return logres;
 	}
 	
-	public boolean isCrown() {
-		double logres = logisticRegression();
-		if (logres > 0.5) {
-			return true;
+	public double isCrown() {
+		if (isCrown) {
+			return 1;
 		}
-		else {
-			return false;
-		}
+		return 0;
 	}
 	
 	public static void main (String args[]) throws FileNotFoundException {
