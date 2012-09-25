@@ -1,9 +1,6 @@
 // Import statements
-import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -24,6 +21,7 @@ public class Separation {
 	ArrayList<Coord> currentLevel = new ArrayList<Coord>();
 	ArrayList<Root> allRoots = new ArrayList<Root>();
 	ArrayList<Root> highTouchingCircs = new ArrayList<Root>();
+	
 	/**
 	 * Read in a file with all voxels from a root system (with
 	 * two lines of header).
@@ -283,29 +281,6 @@ public class Separation {
 			return false;
 	}
 
-	/**
-	 * Outputs the "x y z" coordinates of each voxel of each root
-	 * to the file specified, adding a space between roots.
-	 * 
-	 * @param fileName: output file name.
-	 */
-	private void outputRoots(String fileName) {
-		try {
-			BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
-			for (Root r: allRoots) {
-				if(r.voxels.size() >=20){
-					Collections.sort(r.voxels);
-					for (Coord c: r.voxels) {
-						out.write(c.x + " " + c.y + " " + c.z);
-						out.newLine();
-					}
-				}
-				out.newLine();
-			}
-			out.close();
-		} catch (IOException e) {
-		}
-	}
 
 	private void combineSeeds() {
 		ArrayList<Root> allSeeds = new ArrayList<Root>();
@@ -321,13 +296,13 @@ public class Separation {
 		}
 		Root s = new Root(seed);
 		s.isSeed = true;
-		//allRoots.add(s); Don't actually want seed considered in program
+		//allRoots.add(s); If you want seed included in list of roots, uncomment this line
 	}
 	
-	private void removeSmallRoots() {
+	private void removeSmallRoots(int threshold) {
 		ArrayList<Root> smallRoots = new ArrayList<Root>();
 		for (Root r: allRoots) {
-			if (r.volume() < 20) {
+			if (r.volume() < threshold) {
 				smallRoots.add(r);
 			}
 		}
@@ -335,71 +310,13 @@ public class Separation {
 			allRoots.remove(r);
 		}
 	}
-
-
-
-	private void outputTabular() {
-		try {
-			BufferedWriter outC = new BufferedWriter(new FileWriter("crown.txt"));
-			BufferedWriter outN = new BufferedWriter(new FileWriter("other.txt"));
-			for (Root r: allRoots) {
-				if (r.isCrown() == 1){
-					for (Coord c: r.voxels) {
-						outC.write("voxel\t" + c.x + "\t" + c.y + "\t" + c.z);
-						outC.newLine();
-					}
-					outC.write("area\t" + r.area());
-					outC.newLine();
-					outC.write("angle\t" + r.angle());
-					outC.newLine();
-					outC.write("volume\t" + r.volume());
-					outC.newLine();
-					outC.write("curve\t" + r.curvature());
-					outC.newLine();
-					outC.write("touch\t" + r.attachedToSeed());
-					outC.newLine();
-					outC.write("logistic\t" + r.logisticRegression());
-					outC.newLine();
-				}
-				else {
-					for (Coord c: r.voxels) {
-						outN.write("voxel\t" + c.x + "\t" + c.y + "\t" + c.z);
-						outN.newLine();
-					}
-					outN.write("area\t" + r.area());
-					outN.newLine();
-					outN.write("angle\t" + r.angle());
-					outN.newLine();
-					outN.write("volume\t" + r.volume());
-					outN.newLine();
-					outN.write("curve\t" + r.curvature());
-					outN.newLine();
-					outN.write("touch\t" + r.attachedToSeed());
-					outN.newLine();
-					outN.write("logistic\t" + r.logisticRegression());
-					outN.newLine();
-				}
-			}
-			outC.close();
-			outN.close();
-
-		} catch (IOException e) {
-		}	
-	}
-
-	/**
-	 * Main method that runs the program. 
-	 * 
-	 * @param args
-	 * @throws FileNotFoundException
-	 */
-	public static void main(String[] args) throws FileNotFoundException{
-		Separation f = new Separation();
-		f.readIn("testmodel1.txt");
-		f.splitLevels();
-		f.combineSeeds();
-		f.removeSmallRoots();
-		f.outputTabular();
+	
+	public ArrayList<Root> separateRoots(String fileName) throws FileNotFoundException {
+		readIn(fileName);
+		splitLevels();
+		combineSeeds();
+		removeSmallRoots(20); //Change this number to change size of "small" root
+		return allRoots;
 	}
 
 }
