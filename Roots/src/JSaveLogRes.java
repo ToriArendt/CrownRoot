@@ -1,53 +1,28 @@
 import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JTextField;
 import java.awt.event.ActionEvent;
-import javax.swing.JLabel;
-
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
+
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
 
 
-public class JFileBrowser extends JFrame {
-
-	File file;
+public class JSaveLogRes extends JFrame {
+	private File rootFile;
+	private ArrayList<Root> roots;
 	private JTextField textField;
-	String fileContent = ""; 
+	private File paramFile;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					JFileBrowser window = new JFileBrowser();
-					window.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
-	/**
-	 * Create the application.
-	 */
-	public JFileBrowser() {
+	public JSaveLogRes(File rFile, ArrayList<Root> rSoFar) {
 		setBounds(100, 100, 450, 300);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
-		initialize();
-	}
-
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {
-
+		
 		textField = new JTextField();
 		textField.setBounds(23, 122, 313, 31);
 		getContentPane().add(textField);
@@ -67,29 +42,34 @@ public class JFileBrowser extends JFrame {
 
 		        fileChooser.setAcceptAllFileFilterUsed(false);
 
-		        int rVal = fileChooser.showOpenDialog(null);
-		        file = fileChooser.getSelectedFile();
+		        int rVal = fileChooser.showSaveDialog(null);
+		        paramFile = fileChooser.getSelectedFile();
 		        if (rVal == JFileChooser.APPROVE_OPTION) {
-		          textField.setText(file.toString());
+		          textField.setText(paramFile.toString());
 		        }
 		      }
 		    });
 		  
 
 		
-		JLabel lblNewLabel = new JLabel("Select the 3D root model to classify.");
-		lblNewLabel.setBounds(101, 41, 235, 70);
+		JLabel lblNewLabel = new JLabel("Select name and location for new parameter file.");
+		lblNewLabel.setBounds(71, 40, 313, 70);
 		getContentPane().add(lblNewLabel);
 		
 		JButton btnNext = new JButton("Next >");
 		btnNext.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JChooseParam paramPage=new JChooseParam(file);
-				paramPage.setVisible(true);
+				
+				//TODO: Perform LogRes and output file here.
+				JClassify classify = new JClassify(rootFile, paramFile);
+				classify.setVisible(true);
 				setVisible(false);
 			}
 		});
 		btnNext.setBounds(359, 243, 85, 29);
 		getContentPane().add(btnNext);
+		
 	}
+
+
 }

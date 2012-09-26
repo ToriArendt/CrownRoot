@@ -1,4 +1,5 @@
 // Import statements
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -29,6 +30,8 @@ public class Separation {
 	 * @param fileName: Name of file 
 	 * @throws FileNotFoundException
 	 */
+	
+	
 	public void readIn(String fileName) throws FileNotFoundException {
 		Scanner scanner = new Scanner(new FileInputStream(fileName));
 		try {
