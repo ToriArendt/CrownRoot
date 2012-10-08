@@ -1,4 +1,3 @@
-import java.awt.EventQueue;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -15,7 +14,6 @@ import java.awt.event.ActionEvent;
 
 public class JChooseTrainSet extends JFrame {
 
-	private JFrame frame;
 	private JList list;
 	private DefaultListModel listModel;
 	private File rFile;
