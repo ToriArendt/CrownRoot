@@ -11,4 +11,9 @@ public class LogisticRegression {
 		// TODO Auto-generated constructor stub - read in existing file
 	}
 
+	public double[] getCoefficients() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -69,8 +69,9 @@ public class Separation {
 		int first = 0;
 		for(int i = 1; i<allCoords.size(); i++) {
 			if (allCoords.get(i).z != allCoords.get(i-1).z) {
-				for(int j=first; j<i; j++) 
+				for(int j=first; j<i; j++) {
 					currentLevel.add(allCoords.get(j));
+				}
 				splitIntoRoots(); // automatically splits the cross section into roots
 				currentLevel.clear();
 				first = i;
@@ -320,6 +321,14 @@ public class Separation {
 		combineSeeds();
 		removeSmallRoots(20); //Change this number to change size of "small" root
 		return allRoots;
+	}
+	
+	public static void main(String[] args) throws FileNotFoundException {
+		Separation s = new Separation();
+		ArrayList<Root> rs = s.separateRoots("/Users/victoriaarendt/Documents/Work-bio/Roots/testmodel2.txt");
+		for (Root r: rs) {
+			System.out.println(r.volume() + " " + r.area());
+		}
 	}
 
 }

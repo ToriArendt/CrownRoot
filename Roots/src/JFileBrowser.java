@@ -63,6 +63,8 @@ public class JFileBrowser extends JFrame {
 		        JFileChooser fileChooser = new JFileChooser();
 
 		        // For File
+		        
+	
 		        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
 		        fileChooser.setAcceptAllFileFilterUsed(false);

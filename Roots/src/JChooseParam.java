@@ -27,11 +27,24 @@ public class JChooseParam extends JFrame {
 	 * @param file 
 	 */
 	public JChooseParam(File file) {
+		rootFile = file;
+		paramFile = new File("");
+		initialize();
+	}
+
+	
+
+	public JChooseParam(File rootf, File paramf) {
+		rootFile = rootf;
+		paramFile = paramf;
+		initialize();
+	}
+	
+	public void initialize() {
 		setTitle("Choose Logistic Regression Parameters");
 		setBounds(100, 100, 450, 300);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
-		rootFile = file;
 		
 		JButton btnLoad = new JButton("Load Parameter File");
 		btnLoad.addActionListener(new ActionListener() {
@@ -56,6 +69,7 @@ public class JChooseParam extends JFrame {
 		getContentPane().add(btnNew);
 		
 		textField = new JTextField();
+		textField.setText(paramFile.toString());
 		textField.setBounds(35, 64, 284, 29);
 		getContentPane().add(textField);
 		textField.setColumns(10);

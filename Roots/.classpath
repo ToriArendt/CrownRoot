@@ -3,5 +3,29 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="lib" path="/Users/victoriaarendt/Desktop/weka-3-7-7/weka.jar"/>
+	<classpathentry kind="lib" path="/Users/victoriaarendt/Downloads/org.jzy3d-0.9.jar"/>
+	<classpathentry kind="lib" path="/Users/victoriaarendt/Downloads/org.jzy3d-0.9-dependencies/jogl2-rc10/applet-launcher.jar"/>
+	<classpathentry kind="lib" path="/Users/victoriaarendt/Downloads/org.jzy3d-0.9-dependencies/jogl2-rc10/gluegen-rt-natives-linux-amd64.jar"/>
+	<classpathentry kind="lib" path="/Users/victoriaarendt/Downloads/org.jzy3d-0.9-dependencies/jogl2-rc10/gluegen-rt-natives-linux-armv7.jar"/>
+	<classpathentry kind="lib" path="/Users/victoriaarendt/Downloads/org.jzy3d-0.9-dependencies/jogl2-rc10/gluegen-rt-natives-linux-armv7hf.jar"/>
+	<classpathentry kind="lib" path="/Users/victoriaarendt/Downloads/org.jzy3d-0.9-dependencies/jogl2-rc10/gluegen-rt-natives-linux-i586.jar"/>
+	<classpathentry kind="lib" path="/Users/victoriaarendt/Downloads/org.jzy3d-0.9-dependencies/jogl2-rc10/gluegen-rt-natives-macosx-universal.jar"/>
+	<classpathentry kind="lib" path="/Users/victoriaarendt/Downloads/org.jzy3d-0.9-dependencies/jogl2-rc10/gluegen-rt-natives-solaris-amd64.jar"/>
+	<classpathentry kind="lib" path="/Users/victoriaarendt/Downloads/org.jzy3d-0.9-dependencies/jogl2-rc10/gluegen-rt-natives-solaris-i586.jar"/>
+	<classpathentry kind="lib" path="/Users/victoriaarendt/Downloads/org.jzy3d-0.9-dependencies/jogl2-rc10/gluegen-rt-natives-windows-amd64.jar"/>
+	<classpathentry kind="lib" path="/Users/victoriaarendt/Downloads/org.jzy3d-0.9-dependencies/jogl2-rc10/gluegen-rt-natives-windows-i586.jar"/>
+	<classpathentry kind="lib" path="/Users/victoriaarendt/Downloads/org.jzy3d-0.9-dependencies/jogl2-rc10/gluegen-rt.jar"/>
+	<classpathentry kind="lib" path="/Users/victoriaarendt/Downloads/org.jzy3d-0.9-dependencies/jogl2-rc10/gluegen.jar"/>
+	<classpathentry kind="lib" path="/Users/victoriaarendt/Downloads/org.jzy3d-0.9-dependencies/jogl2-rc10/jogl-all-natives-linux-amd64.jar"/>
+	<classpathentry kind="lib" path="/Users/victoriaarendt/Downloads/org.jzy3d-0.9-dependencies/jogl2-rc10/jogl-all-natives-linux-armv7.jar"/>
+	<classpathentry kind="lib" path="/Users/victoriaarendt/Downloads/org.jzy3d-0.9-dependencies/jogl2-rc10/jogl-all-natives-linux-armv7hf.jar"/>
+	<classpathentry kind="lib" path="/Users/victoriaarendt/Downloads/org.jzy3d-0.9-dependencies/jogl2-rc10/jogl-all-natives-linux-i586.jar"/>
+	<classpathentry kind="lib" path="/Users/victoriaarendt/Downloads/org.jzy3d-0.9-dependencies/jogl2-rc10/jogl-all-natives-macosx-universal.jar"/>
+	<classpathentry kind="lib" path="/Users/victoriaarendt/Downloads/org.jzy3d-0.9-dependencies/jogl2-rc10/jogl-all-natives-solaris-amd64.jar"/>
+	<classpathentry kind="lib" path="/Users/victoriaarendt/Downloads/org.jzy3d-0.9-dependencies/jogl2-rc10/jogl-all-natives-solaris-i586.jar"/>
+	<classpathentry kind="lib" path="/Users/victoriaarendt/Downloads/org.jzy3d-0.9-dependencies/jogl2-rc10/jogl-all-natives-windows-amd64.jar"/>
+	<classpathentry kind="lib" path="/Users/victoriaarendt/Downloads/org.jzy3d-0.9-dependencies/jogl2-rc10/jogl-all-natives-windows-i586.jar"/>
+	<classpathentry kind="lib" path="/Users/victoriaarendt/Downloads/org.jzy3d-0.9-dependencies/jogl2-rc10/jogl-all.jar"/>
+	<classpathentry kind="lib" path="/Users/victoriaarendt/Downloads/org.jzy3d-0.9-dependencies/misc/org.convexhull.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

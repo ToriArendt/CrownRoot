@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
@@ -80,9 +81,16 @@ public class JChooseTrainSet extends JFrame {
 					//TODO: Throw exception (find out what to do)
 				}
 				File f = new File((String) listModel.remove(0));
-				JSelectCrown crownSelection = new JSelectCrown(rFile, f, listModel, new ArrayList<Root>());
-				crownSelection.setVisible(true);
-				setVisible(false);
+				JSelectCrown crownSelection;
+				try {
+					crownSelection = new JSelectCrown(rFile, f, listModel, new ArrayList<Root>());
+					crownSelection.setVisible(true);
+					setVisible(false);
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 			}
 		});
 		button.setBounds(359, 243, 85, 29);

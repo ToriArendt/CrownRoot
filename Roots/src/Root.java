@@ -1,5 +1,7 @@
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 
 import weka.core.DenseInstance;
 import weka.core.Instance;
@@ -27,7 +29,6 @@ public class Root implements Comparable<Root>{
 	boolean isCrown = false;
 	
 	int NUMBER_ATTRIBUTES = 6;
-	double[] atts = {area(), volume(), curvature(), angle(), attachedToSeed(), isCrown()};
 
 	/**
 	 * Constructor
@@ -49,10 +50,7 @@ public class Root implements Comparable<Root>{
 		lastLevel = adds;
 	}
 	
-	public Instance getInstance() {
-		Instance inst = new DenseInstance(1, atts);
-		return inst;
-	}
+
 
 	@Override
 	public int compareTo(Root r) {
@@ -193,6 +191,15 @@ public class Root implements Comparable<Root>{
 		}
 		Root r = new Root(vox);
 		System.out.println(r.angle());
+	}
+
+	public void printTo(File file) {
+		// TODO Write
+	}
+
+	public double[] getValues() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }
