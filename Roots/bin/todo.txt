@@ -1,4 +1,0 @@
-1) All parameters output in Root.java
-2) Logistic regression equation
-3) Tabular output
-4) Take out all color stuff
