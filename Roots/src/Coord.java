@@ -1,7 +1,7 @@
 /**
  * Coordinate (voxel) objects
  * 
- * @author ToriArendt
+ * @author Victoria Arendt
  *
  */
 public class Coord implements Comparable<Coord>{

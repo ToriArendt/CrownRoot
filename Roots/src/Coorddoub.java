@@ -1,7 +1,7 @@
 /**
  * Coordinate (voxel) objects
  * 
- * @author ToriArendt
+ * @author Victoria Arendt
  *
  */
 public class Coorddoub implements Comparable<Coorddoub>{
@@ -22,9 +22,10 @@ public class Coorddoub implements Comparable<Coorddoub>{
 	}
 
 	/**
-	 * Determines if each coordinate is equal to another
+	 * Determines if a coordinate is equal to another
+	 * 
 	 * @param other: other coordinate compared to
-	 * @return
+	 * @return true if x,y,z are equal between two voxels false otherwise
 	 */
 	public boolean equals(Coorddoub other) {
 		if (x == other.x && y == other.y && z == other.z) {
@@ -38,6 +39,7 @@ public class Coorddoub implements Comparable<Coorddoub>{
 	 */
 
 	@Override
+
 	public int compareTo(Coorddoub o) {
 		if (o.z != z){
 			if (z-o.z>0){
@@ -65,7 +67,12 @@ public class Coorddoub implements Comparable<Coorddoub>{
 		}
 		return 0;
 	}
-	
+	/**
+	 * 
+	 * Returns size of the vector from origin to coordinate
+	 * 
+	 * @return distance from this coordinate to the origin
+	 */
 	public double size() {
 		double sum = Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2);
 		return Math.sqrt(sum);

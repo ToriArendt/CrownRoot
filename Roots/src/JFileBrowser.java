@@ -10,9 +10,16 @@ import javax.swing.JLabel;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+/**
+ * 
+ * Selects root system file to classify
+ * 
+ * @author Victoria Arendt
+ *
+ */
 
 public class JFileBrowser extends JFrame {
-
+	private static final long serialVersionUID = 1L;
 	File file;
 	private JTextField textField;
 	String fileContent = ""; 
@@ -37,6 +44,7 @@ public class JFileBrowser extends JFrame {
 	 * Create the application.
 	 */
 	public JFileBrowser() {
+		setTitle("Select Root System to Classify");
 		setBounds(100, 100, 450, 300);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
@@ -47,17 +55,18 @@ public class JFileBrowser extends JFrame {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-
+		// Text field where file name appears
 		textField = new JTextField();
 		textField.setBounds(23, 122, 313, 31);
 		getContentPane().add(textField);
 		textField.setColumns(10);
 		
-		
+		// Browse Button
 		JButton btnBrowse = new JButton("Browse...");
 		btnBrowse.setBounds(334, 123, 89, 30);
 		getContentPane().add(btnBrowse);
 		
+		// Open file chooser on click.
 		  btnBrowse.addActionListener(new ActionListener() {
 		      public void actionPerformed(ActionEvent e) {
 		        JFileChooser fileChooser = new JFileChooser();
@@ -78,11 +87,12 @@ public class JFileBrowser extends JFrame {
 		    });
 		  
 
-		
+		// Label
 		JLabel lblNewLabel = new JLabel("Select the 3D root model to classify.");
 		lblNewLabel.setBounds(101, 41, 235, 70);
 		getContentPane().add(lblNewLabel);
 		
+		// Next Button
 		JButton btnNext = new JButton("Next >");
 		btnNext.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

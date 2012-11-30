@@ -1,45 +1,79 @@
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileNotFoundException;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 
-
+/**
+ * Classify root system based on given parameters
+ * 
+ * @author Victoria Arendt
+ *
+ */
 public class JClassify extends JFrame{
 
-	private File paramFile;
+	private static final long serialVersionUID = 7629730918957666240L;
+	private LogisticRegression logres;
 	private File rootFile;
+	private File paramFile;
 	private File saveLocation;
 	private JTextField textField;
 	private JTextField textField_1;
 	
 	/**
-	 * Create the application.
-	 * @param paramFile 
-	 * @param rootFile 
+	 * Construct from param file
+	 * @param rFile root file
+	 * @param pFile parameter file
+	 * @throws Exception
 	 */
-	public JClassify(File rFile, File pFile) {
-		
+	public JClassify(File rFile, File pFile) throws Exception {
+		setTitle("Choose Save Location for Classification Files");
 		setBounds(100, 100, 450, 300);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
 		
-		rootFile = rFile;
 		paramFile = pFile;
+		rootFile = rFile;
+		logres = new LogisticRegression(pFile);
 		
+		initialize();
+	}
+	
+	/**
+	 * Construct from logistic regression 
+	 * 
+	 * @param rFile root file
+	 * @param l logistic regression object
+	 */
+	public JClassify(File rFile, LogisticRegression l) {
+		setTitle("Choose Save Location for Classification Files");
+		setBounds(100, 100, 450, 300);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		getContentPane().setLayout(null);
+		
+		paramFile = l.getFile();
+		rootFile = rFile;
+		logres = l;
+		
+		initialize();
+	}
+		
+	/**
+	 * Initialize frame
+	 */
+	public void initialize() {		
+		
+		//Text field for save directory
 		textField = new JTextField();
 		textField.setBounds(23, 84, 313, 31);
 		getContentPane().add(textField);
 		textField.setColumns(10);
 		
-		
+		//Browse for directory
 		JButton btnBrowse = new JButton("Browse...");
 		btnBrowse.setBounds(335, 85, 89, 30);
 		getContentPane().add(btnBrowse);
@@ -69,19 +103,22 @@ public class JClassify extends JFrame{
 			label.setBounds(147, 127, 150, 23);
 			getContentPane().add(label);
 			
+			// Text field for file prefix
 			textField_1 = new JTextField();
 			textField_1.setColumns(10);
 			textField_1.setBounds(96, 162, 247, 31);
 			getContentPane().add(textField_1);
 			
+			// Next Button
 			JButton btnPerformClassification = new JButton("Next >");
 			btnPerformClassification.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
-						Classify c = new Classify(rootFile, paramFile, saveLocation, textField_1.getText());
-						
-					} catch (FileNotFoundException e1) {
-						// TODO Auto-generated catch block
+						Classify c = new Classify(rootFile, logres, saveLocation, textField_1.getText());
+						JConfirmClassify classify = new JConfirmClassify(c);
+						classify.setVisible(true);
+						setVisible(false);
+					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
 				}
@@ -89,6 +126,7 @@ public class JClassify extends JFrame{
 			btnPerformClassification.setBounds(359, 243, 85, 29);
 			getContentPane().add(btnPerformClassification);
 			
+			// Back Button
 			JButton button = new JButton("< Prev");
 			button.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
@@ -102,4 +140,6 @@ public class JClassify extends JFrame{
 			
 			
 	}
+
+	
 }

@@ -1,34 +1,46 @@
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
-
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-
+/**
+ * Create and save logistic regression classifier
+ * 
+ * @author Victoria Arendt
+ *
+ */
 public class JSaveLogRes extends JFrame {
+	private static final long serialVersionUID = 1L;
 	private File rootFile;
-	private ArrayList<Root> roots;
 	private JTextField textField;
 	private File paramFile;
 
 
-	public JSaveLogRes(File rFile, ArrayList<Root> rSoFar) {
+	/**
+	 * 
+	 * @param rFile - file to classify
+	 * @param rSoFar - root training set
+	 */
+	public JSaveLogRes(File rFile, final ArrayList<Root> rSoFar) {
+		rootFile = rFile;
+		
+		setTitle("Save Parameter File");
 		setBounds(100, 100, 450, 300);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
 		
+		// Text field of where to save param file
 		textField = new JTextField();
 		textField.setBounds(23, 122, 313, 31);
 		getContentPane().add(textField);
 		textField.setColumns(10);
 		
-		
+		// Browse button
 		JButton btnBrowse = new JButton("Browse...");
 		btnBrowse.setBounds(334, 123, 89, 30);
 		getContentPane().add(btnBrowse);
@@ -56,12 +68,17 @@ public class JSaveLogRes extends JFrame {
 		lblNewLabel.setBounds(71, 40, 313, 70);
 		getContentPane().add(lblNewLabel);
 		
+		// Next button
 		JButton btnNext = new JButton("Next >");
 		btnNext.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				//TODO: Perform LogRes and output file here.
-				JClassify classify = new JClassify(rootFile, paramFile);
+				LogisticRegression l = null;
+				try {
+					l = new LogisticRegression(rSoFar,paramFile.toString());
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+				JClassify classify = new JClassify(rootFile,l);
 				classify.setVisible(true);
 				setVisible(false);
 			}

@@ -1,5 +1,5 @@
 // Import statements
-import java.io.File;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -286,13 +286,20 @@ public class Separation {
 	}
 
 
+	/**
+	 * If there are multiple seeds, combines into one seed
+	 */
 	private void combineSeeds() {
+		
+		// Find all seeds
 		ArrayList<Root> allSeeds = new ArrayList<Root>();
 		for (Root r: allRoots) {
 			if (r.isSeed) {
 				allSeeds.add(r);
 			}
 		}
+		
+		// combine all seed voxels into one seed "root"
 		ArrayList<Coord> seed = new ArrayList<Coord>();
 		for (Root s: allSeeds){
 			allRoots.remove(s);
@@ -303,6 +310,11 @@ public class Separation {
 		//allRoots.add(s); If you want seed included in list of roots, uncomment this line
 	}
 	
+	/**
+	 * Remove all roots that are not a given size (threshold)
+	 * 
+	 * @param threshold - cutoff number of voxels (roots with less will not be included)
+	 */
 	private void removeSmallRoots(int threshold) {
 		ArrayList<Root> smallRoots = new ArrayList<Root>();
 		for (Root r: allRoots) {
@@ -315,20 +327,20 @@ public class Separation {
 		}
 	}
 	
+	/**
+	 * Call to actually separate the roots of a file 
+	 * 
+	 * @param fileName - reconstruction file of root system
+	 * @return ArrayList of separate roots
+	 * @throws FileNotFoundException - if file does not exist
+	 */
 	public ArrayList<Root> separateRoots(String fileName) throws FileNotFoundException {
+		//TODO: Make this a constructor so that roots are automatically separated when a Separation object is created.
 		readIn(fileName);
 		splitLevels();
 		combineSeeds();
 		removeSmallRoots(20); //Change this number to change size of "small" root
 		return allRoots;
-	}
-	
-	public static void main(String[] args) throws FileNotFoundException {
-		Separation s = new Separation();
-		ArrayList<Root> rs = s.separateRoots("/Users/victoriaarendt/Documents/Work-bio/Roots/testmodel2.txt");
-		for (Root r: rs) {
-			System.out.println(r.volume() + " " + r.area());
-		}
 	}
 
 }
