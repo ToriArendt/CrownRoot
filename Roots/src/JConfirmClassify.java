@@ -24,6 +24,10 @@ import org.jzy3d.maths.Coord3d;
 public class JConfirmClassify extends JFrame {
 	
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private ArrayList<Root> crown;
 	private ArrayList<Root> other;
 	private Classify classification;
